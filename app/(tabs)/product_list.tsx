@@ -15,7 +15,7 @@ import {
   fetchProducts,
   increaseQuantity,
   addToCart,
-} from "../../../redux/slices/productSlice";
+} from "../../src/redux/slices/productSlice";
 import AntDesign from "@expo/vector-icons/AntDesign";
 const { width } = Dimensions.get("window");
 

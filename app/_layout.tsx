@@ -7,7 +7,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Provider, useSelector } from "react-redux";
-import store from "../redux/store";
+import store from "../src/redux/store";
 // import RootNavigation from "./root_navigation";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
