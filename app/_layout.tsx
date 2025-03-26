@@ -1,8 +1,3 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -11,6 +6,9 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { Provider, useSelector } from "react-redux";
+import store from "../redux/store";
+// import RootNavigation from "./root_navigation";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,16 +30,28 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="product_list" options={{ headerShown: false }} />
-        <Stack.Screen name="product_details" options={{ headerShown: false }} />
-        <Stack.Screen name="cart" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <Provider store={store}>
+      {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}> */}
+      {/* <RootNavigation /> */}
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="login" />
       </Stack>
       <StatusBar style="auto" />
-    </ThemeProvider>
+      {/* </ThemeProvider> */}
+    </Provider>
   );
 }
+
+const RootNavigation = () => {
+  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
+  console.log("isLoggedIn root->", isLoggedIn);
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      {!isLoggedIn ? (
+        <Stack.Screen name="login" />
+      ) : (
+        <Stack.Screen name="(tabs)" />
+      )}
+    </Stack>
+  );
+};

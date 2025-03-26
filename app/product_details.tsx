@@ -1,11 +1,24 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  decreaseQuantity,
+  increaseQuantity,
+} from "@/redux/slices/productSlice";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const ProductDetails = () => {
+  const dispatch = useDispatch();
+
+  const router = useRouter();
+  const { cart } = useSelector((state) => state.products);
   const { product } = useLocalSearchParams();
   const productData = JSON.parse(product);
-  const router = useRouter();
+
+  const getCartQuantity = (id: any) =>
+    cart.find((item: any) => item.id === id)?.quantity || 0;
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -40,17 +53,36 @@ const ProductDetails = () => {
           </Text>
         </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.addButton}
-          activeOpacity={0.6}
-          onPress={() => {
-            router.navigate("/cart");
-          }}
-        >
-          <Text style={styles.addButtonText}>Add</Text>
-        </TouchableOpacity>
-      </View>
+
+      {getCartQuantity(productData?.id) === 0 ? (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.addButton}
+            activeOpacity={0.6}
+            onPress={() => {
+              dispatch(addToCart(productData));
+            }}
+          >
+            <Text style={styles.addButtonText}>Add</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={[styles.quantityContainer, styles.buttonContainer]}>
+          <TouchableOpacity
+            onPress={() => dispatch(decreaseQuantity(productData?.id))}
+          >
+            <AntDesign name="minus" size={18} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.quantityCount}>
+            {getCartQuantity(productData?.id)}
+          </Text>
+          <TouchableOpacity
+            onPress={() => dispatch(increaseQuantity(productData?.id))}
+          >
+            <AntDesign name="plus" size={18} color="black" />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -63,6 +95,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     backgroundColor: "#ffff",
     justifyContent: "space-between",
+    paddingHorizontal: 10,
   },
   productImage: {
     resizeMode: "contain",
@@ -82,7 +115,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   bodyContainer: {
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   descriptionText: {
     fontSize: 15,
@@ -100,7 +133,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   buttonContainer: {
-    paddingHorizontal: 10,
     marginVertical: 20,
   },
   addButtonText: {
@@ -122,5 +154,20 @@ const styles = StyleSheet.create({
     width: 30,
     justifyContent: "center",
     zIndex: 10,
+  },
+  quantityContainer: {
+    borderColor: "#098516",
+    borderWidth: 1,
+    width: "100%",
+    borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    height: 50,
+    alignSelf: "center",
+  },
+  quantityCount: {
+    fontSize: 20,
+    fontWeight: "700",
   },
 });

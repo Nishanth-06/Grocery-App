@@ -11,10 +11,20 @@ import {
 } from "react-native";
 
 import { useState } from "react";
+import { useRouter } from "expo-router";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/slices/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+
+  const handleLogin = () => {
+    dispatch(login()); // Updates Redux state
+    router.replace("/(tabs)"); // Redirect to product screen
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -43,7 +53,13 @@ const Login = () => {
             }}
             value={password}
           />
-          <TouchableOpacity style={styles.button} activeOpacity={0.6}>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.6}
+            onPress={() => {
+              handleLogin();
+            }}
+          >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
