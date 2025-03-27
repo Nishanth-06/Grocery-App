@@ -15,15 +15,14 @@ const Barcode = () => {
   const navigation = useNavigation();
   const { products } = useSelector((state: any) => state.products);
   const [facing, setFacing] = useState<CameraType>("back");
+  const [scanned, setScanned] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
 
   if (!permission) {
-    // Camera permissions are still loading.
     return <View />;
   }
 
   if (!permission.granted) {
-    // Camera permissions are not granted yet.
     return (
       <View style={styles.container}>
         <Text style={styles.message}>
@@ -39,13 +38,20 @@ const Barcode = () => {
   };
 
   const onBarcodeScanned = ({ data }: any) => {
-    const product = products.find((p: any) => p.id === data);
+    if (scanned) return;
 
+    setScanned(true);
+    const product = products.find((p: any) => p?.gtin === data);
     if (product) {
-      navigation.navigate("ProductDetails", { product });
+      navigation.navigate("Products", {
+        screen: "ProductDetails",
+        params: { product },
+      });
     } else {
       Alert.alert("Product not found", "This barcode is not recognized.");
     }
+
+    setTimeout(() => setScanned(false), 2000);
   };
 
   return (
@@ -54,7 +60,8 @@ const Barcode = () => {
         style={styles.camera}
         facing={facing}
         barcodeScannerSettings={{ barcodeTypes: ["qr", "ean13", "upc_a"] }}
-        onBarcodeScanned={onBarcodeScanned}
+        FocusMode={"on"}
+        onBarcodeScanned={scanned ? undefined : onBarcodeScanned}
       >
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>

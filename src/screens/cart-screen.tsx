@@ -98,7 +98,7 @@ const Cart = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
+    marginTop: 50,
     paddingHorizontal: 10,
   },
   productImage: {
@@ -112,7 +112,6 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     marginTop: 40,
-    marginBottom: 40,
   },
   itemContainer: {
     backgroundColor: "#ffff",
@@ -128,6 +127,8 @@ const styles = StyleSheet.create({
   itemText: {
     color: "#000000",
     fontWeight: "500",
+    fontSize: 13,
+    width: "49%",
   },
   mrpText: {
     fontWeight: "400",

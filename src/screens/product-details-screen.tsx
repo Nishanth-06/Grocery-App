@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addToCart,
@@ -94,6 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffff",
     justifyContent: "space-between",
     paddingHorizontal: 10,
+    marginTop: 20,
   },
   productImage: {
     resizeMode: "contain",

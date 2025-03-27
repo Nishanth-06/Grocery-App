@@ -1,5 +1,4 @@
-import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +8,7 @@ import {
   Dimensions,
   Image,
   ActivityIndicator,
+  StatusBar,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -41,7 +41,7 @@ const RenderItem = (props: any) => {
       <View style={styles.itemFooterView}>
         <View style={styles.textView}>
           <Text style={styles.itemText}>
-            {item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}
+            {item.name.length > 40 ? `${item.name.slice(0, 40)}...` : item.name}
           </Text>
           <Text style={styles.mrpText}>MRP : ₹100</Text>
         </View>
@@ -75,15 +75,9 @@ const RenderItem = (props: any) => {
 const ProductList = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const data = [
-    { id: 1, name: "Banana" },
-    { id: 2, name: "Apple" },
-    { id: 3, name: "Melon" },
-    { id: 4, name: "Melon" },
-  ];
   const { products, cart, loading } = useSelector((state) => state.products);
   const { user } = useSelector((state) => state.auth);
-  console.log("USER-->", user);
+  const userName = user?.user?.givenName ? user?.user?.givenName : "User";
   useEffect(() => {
     dispatch(fetchProducts());
   }, []);
@@ -98,35 +92,36 @@ const ProductList = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Hi {user?.user?.givenName}</Text>
-      {loading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <RenderItem
-              item={item}
-              navigation={navigation}
-              dispatch={dispatch}
-              cart={cart}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          numColumns={2}
-          style={styles.flatlist}
-          columnWrapperStyle={styles.row}
-        />
-      )}
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
+      <Text style={styles.text}>Hi {userName}</Text>
+      <FlatList
+        data={products}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <RenderItem
+            item={item}
+            navigation={navigation}
+            dispatch={dispatch}
+            cart={cart}
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        numColumns={2}
+        style={styles.flatlist}
+        columnWrapperStyle={styles.row}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
+    marginTop: 50,
     paddingHorizontal: 10,
   },
   text: {
@@ -154,6 +149,7 @@ const styles = StyleSheet.create({
   itemText: {
     color: "#000000",
     fontWeight: "500",
+    fontSize: 10,
   },
   addButton: {
     backgroundColor: "#098516",

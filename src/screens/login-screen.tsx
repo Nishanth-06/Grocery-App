@@ -1,5 +1,4 @@
 import {
-  Image,
   StyleSheet,
   Platform,
   View,
@@ -8,6 +7,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  StatusBar,
+  Alert,
 } from "react-native";
 
 import { useEffect, useState } from "react";
@@ -25,7 +26,6 @@ const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState();
-  const [userInfo, setUserInfo] = useState();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -41,67 +41,79 @@ const Login = () => {
     try {
       await GoogleSignin.hasPlayServices();
       const user = await GoogleSignin.signIn();
-      console.log("USER-->", user);
       if (user && user.data) {
         dispatch(addUser(user?.data || {}));
         dispatch(login());
         navigation.replace("MainStack");
       }
     } catch (e: any) {
-      console.log("error-->", error);
+      console.log("error", error);
       setError(e);
     }
   };
 
   const handleLogin = () => {
-    dispatch(login());
-    navigation.replace("MainStack");
+    if (email === "nishanth@gmail.com" && password === "123") {
+      dispatch(login());
+      navigation.navigate("Products", {
+        screen: "Products",
+      });
+    } else {
+      Alert.alert("Incorrect User Details");
+    }
   };
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-      style={styles.container}
-    >
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+        style={styles.container}
       >
-        <Text style={styles.text}>LOGIN</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Your Email"
-            onChangeText={(text) => {
-              setEmail(text);
-            }}
-            value={email}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Your Password"
-            onChangeText={(text) => {
-              setPassword(text);
-            }}
-            value={password}
-          />
-          <TouchableOpacity
-            style={styles.button}
-            activeOpacity={0.6}
-            onPress={() => {
-              handleLogin();
-            }}
-          >
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-          <GoogleSigninButton
-            size={GoogleSigninButton.Size.Standard}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={signin}
-          />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text style={styles.text}>LOGIN</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Your Email"
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
+              value={email}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Your Password"
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              value={password}
+            />
+            <TouchableOpacity
+              style={styles.button}
+              activeOpacity={0.6}
+              onPress={() => {
+                handleLogin();
+              }}
+            >
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+            <GoogleSigninButton
+              size={GoogleSigninButton.Size.Standard}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={signin}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 
