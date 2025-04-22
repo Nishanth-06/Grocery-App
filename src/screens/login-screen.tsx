@@ -53,15 +53,20 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    if (email === "nishanth@gmail.com" && password === "123") {
-      dispatch(login());
-      navigation.navigate("Products", {
-        screen: "Products",
-      });
-    } else {
-      Alert.alert("Incorrect User Details");
-    }
+    dispatch(login());
+    navigation.navigate("Products", {
+      screen: "Products",
+    });
+    // if (email === "nishanth@gmail.com" && password === "123") {
+    //   dispatch(login());
+    //   navigation.navigate("Products", {
+    //     screen: "Products",
+    //   });
+    // } else {
+    //   Alert.alert("Incorrect User Details");
+    // }
   };
+
   return (
     <>
       <StatusBar
@@ -156,6 +161,29 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: "#fff",
+  },
+  row: {
+    flexDirection: "row",
+    marginVertical: 2,
+  },
+  cell: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 4,
+    width: 100,
+    fontSize: 12,
+  },
+  buttonContainer: {
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+    right: 10,
+    backgroundColor: "#fff",
+  },
+  footer: {
+    padding: 20,
+    alignItems: "center",
+    backgroundColor: "#f9f9f9",
   },
 });
 
